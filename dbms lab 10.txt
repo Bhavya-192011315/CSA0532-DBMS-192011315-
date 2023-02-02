@@ -1,0 +1,113 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 6
+Server version: 5.5.62 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> alter table mentees add subjects varchar(10);
+ERROR 1046 (3D000): No database selected
+mysql> USE SSE;
+Database changed
+mysql> alter table mentees add subjects varchar(10);
+ERROR 1060 (42S21): Duplicate column name 'subjects'
+mysql> alter table mentees add subject varchar(20);
+Query OK, 3 rows affected (0.14 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> update mentees set subject="pdsd" whare dept="CSE";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'whare dept="CSE"' at line 1
+mysql> update mentees set subject="pdsd" where dept="ece";
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update mentees set subject="dbms"where dept="CSE";
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> update mentees set subject="pss" where regno=1921789;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select*from mentees;
++-------+-----------+------+---------+--------------+-------+----------+---------+
+| name  | regno     | dept | address | fathername   | marks | subjects | subject |
++-------+-----------+------+---------+--------------+-------+----------+---------+
+| BHAVI | 192011315 | CSE  | vij     | VENKAT REDDY |    67 | NULL     | dbms    |
+| SIRI  |   1921789 | ece  | ptp     | SHEKAR REDDY |  NULL | NULL     | pss     |
+| VENKY |  34567890 | CSE  | ptp     | SHIVA REDDY  |    57 | NULL     | dbms    |
++-------+-----------+------+---------+--------------+-------+----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> create view marks_view as select subject,marks from mentees;
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> select*from marks_view;
++---------+-------+
+| subject | marks |
++---------+-------+
+| dbms    |    67 |
+| pss     |  NULL |
+| dbms    |    57 |
++---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> create index subject on mentees(subject);
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show index from mentees;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| mentees |          1 | subject  |            1 | subject     | A         |           3 |     NULL | NULL   | YES  | BTREE      |         |               |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+1 row in set (0.03 sec)
+
+mysql> create table per(pid int NOT NULL AUTO_INCREMENT,name varchar(50),age int(3),primary key(pid));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> desc per;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| pid   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50) | YES  |     | NULL    |                |
+| age   | int(3)      | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+3 rows in set (0.05 sec)
+
+mysql> alter table per AUTO_INCREMENT=100;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into per(name,age) values ("bhavi",40);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select*from per;
++-----+-------+------+
+| pid | name  | age  |
++-----+-------+------+
+| 100 | bhavi |   40 |
++-----+-------+------+
+1 row in set (0.00 sec)
+
+mysql> insert into per(name,age) values ("siri",50);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select*from per;
++-----+-------+------+
+| pid | name  | age  |
++-----+-------+------+
+| 100 | bhavi |   40 |
+| 101 | siri  |   50 |
++-----+-------+------+
+2 rows in set (0.02 sec)
+
+mysql>
