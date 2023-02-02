@@ -1,0 +1,159 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 4
+Server version: 5.5.62 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE SSE
+Database changed
+mysql> select*from mentees;
++-------+-----------+------+---------+--------------+-------+
+| name  | regno     | dept | address | fathername   | marks |
++-------+-----------+------+---------+--------------+-------+
+| BHAVI | 192011315 | CSE  | vij     | VENKAT REDDY |    67 |
+| SIRI  |   1921789 | ece  | ptp     | SHEKAR REDDY |  NULL |
+| VENKY |  34567890 | CSE  | ptp     | SHIVA REDDY  |    57 |
++-------+-----------+------+---------+--------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc mentees;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| name       | varchar(20) | YES  |     | NULL    |       |
+| regno      | int(11)     | YES  |     | NULL    |       |
+| dept       | varchar(10) | YES  |     | NULL    |       |
+| address    | varchar(20) | YES  |     | NULL    |       |
+| fathername | varchar(20) | YES  |     | NULL    |       |
+| marks      | int(2)      | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> select*from mentees;
++-------+-----------+------+---------+--------------+-------+
+| name  | regno     | dept | address | fathername   | marks |
++-------+-----------+------+---------+--------------+-------+
+| BHAVI | 192011315 | CSE  | vij     | VENKAT REDDY |    67 |
+| SIRI  |   1921789 | ece  | ptp     | SHEKAR REDDY |  NULL |
+| VENKY |  34567890 | CSE  | ptp     | SHIVA REDDY  |    57 |
++-------+-----------+------+---------+--------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table mdept(deptid int(5),deptname varchar(20),rollno int(10));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into mdept values(1,"CSE",192011315);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into mdept values(2,"ece",1921789);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into mdept values(3,"CSE",34567890);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> update mdept set deptid=3 where rollno=34567890;
+Query OK, 0 rows affected (0.03 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> select*from mdept;
++--------+----------+-----------+
+| deptid | deptname | rollno    |
++--------+----------+-----------+
+|      1 | CSE      | 192011315 |
+|      2 | ece      |   1921789 |
+|      3 | CSE      |  34567890 |
++--------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> update mdept set deptname="ece" where rollno=192011315;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select*from mdept;
++--------+----------+-----------+
+| deptid | deptname | rollno    |
++--------+----------+-----------+
+|      1 | ece      | 192011315 |
+|      2 | ece      |   1921789 |
+|      3 | CSE      |  34567890 |
++--------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select deptid,deptname,rollno from mdept,mentees where mentees.regno=mdept.rollno;
++--------+----------+-----------+
+| deptid | deptname | rollno    |
++--------+----------+-----------+
+|      1 | ece      | 192011315 |
+|      2 | ece      |   1921789 |
+|      3 | CSE      |  34567890 |
++--------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select name,deptid,deptname,rollno from mdept m,mentees m1 where m1.regno=m.rollno;
++-------+--------+----------+-----------+
+| name  | deptid | deptname | rollno    |
++-------+--------+----------+-----------+
+| BHAVI |      1 | ece      | 192011315 |
+| SIRI  |      2 | ece      |   1921789 |
+| VENKY |      3 | CSE      |  34567890 |
++-------+--------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select name,dept,deptid,deptname,rollno from mdept,mentees where mentees.regno=mdept.rollno;
++-------+------+--------+----------+-----------+
+| name  | dept | deptid | deptname | rollno    |
++-------+------+--------+----------+-----------+
+| BHAVI | CSE  |      1 | ece      | 192011315 |
+| SIRI  | ece  |      2 | ece      |   1921789 |
+| VENKY | CSE  |      3 | CSE      |  34567890 |
++-------+------+--------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> -select rollno,deptname,name,address from mdept left outer join mentees on mdept.rollno=mentees.regno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-select rollno,deptname,name,address from mdept left outer join mentees on mdept' at line 1
+mysql> select rollno,deptname,name,address from mdept left outer join mentees on mdept.rollno=mentees.regno;
++-----------+----------+-------+---------+
+| rollno    | deptname | name  | address |
++-----------+----------+-------+---------+
+| 192011315 | ece      | BHAVI | vij     |
+|   1921789 | ece      | SIRI  | ptp     |
+|  34567890 | CSE      | VENKY | ptp     |
++-----------+----------+-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select rollno,deptname,name,address from mdept right outer join mentees on mdept.rollno=mentees.regno;
++-----------+----------+-------+---------+
+| rollno    | deptname | name  | address |
++-----------+----------+-------+---------+
+| 192011315 | ece      | BHAVI | vij     |
+|   1921789 | ece      | SIRI  | ptp     |
+|  34567890 | CSE      | VENKY | ptp     |
++-----------+----------+-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> insert into mdept values(4,"ENE",192011315);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into mdept values(5,"COM",1921789);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select rollno,deptname,name,address from mdept right outer join mentees on mdept.rollno=mentees.regno;
++-----------+----------+-------+---------+
+| rollno    | deptname | name  | address |
++-----------+----------+-------+---------+
+| 192011315 | ece      | BHAVI | vij     |
+| 192011315 | ENE      | BHAVI | vij     |
+|   1921789 | ece      | SIRI  | ptp     |
+|   1921789 | COM      | SIRI  | ptp     |
+|  34567890 | CSE      | VENKY | ptp     |
++-----------+----------+-------+---------+
+5 rows in set (0.00 sec)
+
+mysql>
