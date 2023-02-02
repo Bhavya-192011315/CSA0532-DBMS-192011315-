@@ -1,0 +1,65 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.5.62 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select*from mentees;
+ERROR 1046 (3D000): No database selected
+mysql> USE SSE;
+Database changed
+mysql> select*from mentees;
++-------+-----------+------+---------+--------------+-------+
+| name  | regno     | dept | address | fathername   | marks |
++-------+-----------+------+---------+--------------+-------+
+| BHAVI | 192011315 | CSE  | vij     | VENKAT REDDY |    67 |
+| SIRI  |   1921789 | ece  | ptp     | SHEKAR REDDY |  NULL |
+| VENKY |  34567890 | CSE  | ptp     | SHIVA REDDY  |    57 |
++-------+-----------+------+---------+--------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select regno,name from mentees where name IN(select name from mentees where dept="ece");
++---------+------+
+| regno   | name |
++---------+------+
+| 1921789 | SIRI |
++---------+------+
+1 row in set (0.00 sec)
+
+mysql> create table mentees1(id int(10),name varchar(20));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into mentees1(id,name)
+    -> select regno,name
+    -> from mentees where dept="ece";
+Query OK, 1 row affected (0.03 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select*from mentees1;
++---------+------+
+| id      | name |
++---------+------+
+| 1921789 | SIRI |
++---------+------+
+1 row in set (0.00 sec)
+
+mysql> select regno,(select name from mentees1 where id=192011315)as name,dept,address,fathername,Marks,from mentees where regno=192011315;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from mentees where regno=192011315' at line 1
+mysql>  select regno,(select name from mentees1 where id=192011315)as name,dept,address,fathername,Marks,from mentees where regno=1921789;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from mentees where regno=1921789' at line 1
+mysql> select regno,(select name from mentees1 where id=1921789)as name,dept,address,fathername,Marks from mentees where regno=192011315;
++-----------+------+------+---------+--------------+-------+
+| regno     | name | dept | address | fathername   | Marks |
++-----------+------+------+---------+--------------+-------+
+| 192011315 | SIRI | CSE  | vij     | VENKAT REDDY |    67 |
++-----------+------+------+---------+--------------+-------+
+1 row in set (0.00 sec)
+
+mysql>
